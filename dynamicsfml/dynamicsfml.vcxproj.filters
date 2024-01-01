@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{7fb11196-4a86-468e-884a-62037cfac910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="b_rook.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="w_bishop.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="w_king.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="w_knight.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="w_pawn.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="w_queen.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="w_rook.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="b_bishop.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="b_king.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="b_knight.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="b_pawn.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="b_queen.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="bishop.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="king.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="knight.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="pawn.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="pieces.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="queen.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="rook.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
