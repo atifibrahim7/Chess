@@ -26,6 +26,9 @@ Menu()
     {
         std::cout << "Failed to load menu music!" << std::endl;
     }
+    music.setVolume(50);
+    startmusic.setVolume(50);
+    quitmusic.setVolume(50);
     startmusic.openFromFile("asserts/start.wav");
     quitmusic.openFromFile("asserts/start.wav");
     //background.setScale(2.15, 1.5);
