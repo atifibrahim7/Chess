@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include<time.h>
+#include <SFML/Audio.hpp>
 #include<iostream>
 #include<fstream>
 using namespace std; 
@@ -14,11 +15,17 @@ public:
 
 Sprite background; //Game background sprite
 Texture bg_texture;
+Music music; 
 
 Menu()
 {
     bg_texture.loadFromFile("asserts/mainmenu.png");
     background.setTexture(bg_texture);
+    if (!music.openFromFile("asserts/bgmusic.wav"))
+    {
+        std::cout << "Failed to load menu music!" << std::endl;
+    }
+
     //background.setScale(2.15, 1.5);
 }
 void names_menu()
@@ -108,7 +115,7 @@ bool display_menu()
     Font font;
     font.loadFromFile("font2.ttf");
 
-    
+    music.play();
 
 
     srand(time(0));
@@ -151,11 +158,12 @@ bool display_menu()
                     if (mousePos.x >= 270 && mousePos.x <= 340 && mousePos.y >= 470 && mousePos.y <= 535)
                     {
                       std::  cout << "sound ON";
-                       
+                      music.play();
                     }
                     if (mousePos.x >= 360 && mousePos.x <= 430 && mousePos.y >= 468 && mousePos.y <= 535)
                     {
                         std::cout << "sound OFF ";
+                        music.pause();
 
                     }
 
