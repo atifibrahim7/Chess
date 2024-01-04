@@ -48,6 +48,8 @@ Color col1 = Color::White;
 Color col2 = Color::Black;
 Sprite background; //Game background sprite
 Texture bg_texture;
+Music bg_music ,whitepieceselect , blackpieceselect , invalidmusic;
+
 
 T1 posx_a;
 T2 posy_a;
@@ -88,8 +90,13 @@ public:
     }
 // MAIN CONSTRUCTOR
 Game()
-{
+{       
+    whitepieceselect.openFromFile("asserts/whitemove.wav");
+    blackpieceselect.openFromFile("asserts/blackmove.wav");
+    bg_music.openFromFile("asserts/bgmusic.wav");
+    invalidmusic.openFromFile("asserts/invalidmove.wav");
     bg_texture.loadFromFile("asserts/Board.png");
+
     background.setTexture(bg_texture);
     //background.setScale(0.73, 0.73);
 
@@ -752,7 +759,9 @@ void select_piece(int posX, int posY, RenderWindow& window)
             {
                 selected_piece = i;
                 selected = 1;
-                //cout<<"YEET";
+                whitepieceselect.stop();
+                whitepieceselect.play();
+                cout<<"YET";
                 break;
             }
         }
@@ -766,6 +775,9 @@ void select_piece(int posX, int posY, RenderWindow& window)
             {
                 selected_piece = i;
                 selected = 1;
+                cout << "HEHEHHEHEHEHE";
+                blackpieceselect.stop();
+                blackpieceselect.play();
                 break;
             }
         }
@@ -792,7 +804,9 @@ void move_piece(int posX, int posY, RenderWindow& window, Event& e)
     }
 
     if (valid_move())
-    {
+    {   
+        whitepieceselect.stop();
+        whitepieceselect.play();
         if (!turn)
         {
             white_piece[selected_piece]->sprite.setPosition(place_posX, place_posY);
@@ -906,7 +920,10 @@ void move_piece(int posX, int posY, RenderWindow& window, Event& e)
         //cout<<"NOOO";
         turn = !turn;
     }
-    
+    else {
+        invalidmusic.stop();
+        invalidmusic.play();
+    }
     selected = 0;
 }
 
@@ -970,8 +987,11 @@ void check_upgrade_black(Event& e)
 }
 
 /////////////////////// GAME FUNCTION ////////////////////////////////////////////////
-void start_game()
-{
+int  start_game()
+{   
+    if(m->getMusicFlag())
+    bg_music.play();
+
     srand(time(0));
     RenderWindow window(VideoMode(1280, 720), title);
     Clock clock;
@@ -989,8 +1009,30 @@ void start_game()
             while (window.pollEvent(e))
             {  
                 if (e.type == Event::Closed) // If cross/close is clicked/pressed
-                    window.close(); //close the game  
+                    exit(1);
+                    //window.close(); //close the game      
 
+                if (e.type == Event::MouseButtonPressed && e.mouseButton.button == Mouse::Left)
+                {
+                    Vector2i mousePos = Mouse::getPosition(window);
+                    std::cout << "x : " << mousePos.x << " " << "|| y : " << mousePos.y << std::endl;
+                    if (mousePos.x >= 8 && mousePos.x <= 83 && mousePos.y >= 8 && mousePos.y <= 85)
+                    {
+                        std::cout << "Home";
+                        return 999;         // Means go to menu back 
+
+                    }
+                    if (mousePos.x >= 1199 && mousePos.x <= 1263 && mousePos.y >= 8 && mousePos.y <= 85)
+                    {
+                        std::cout << "exit from game";
+                        return 111;         // Means go to Exit back 
+
+                    }
+                }
+
+
+
+                
                 if(e.type == sf::Event::MouseButtonPressed)
                 {
                     if(e.mouseButton.button == sf::Mouse::Left)
@@ -1006,6 +1048,8 @@ void start_game()
                             move_piece(click_posX, click_posY, window, e);
                         }
                     }
+
+
                 }               	    
             }
 

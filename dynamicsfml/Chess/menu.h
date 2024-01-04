@@ -15,7 +15,8 @@ public:
 
 Sprite background; //Game background sprite
 Texture bg_texture;
-Music music; 
+Music music, startmusic, quitmusic;
+bool musicflag_bg = 0;
 
 Menu()
 {
@@ -25,11 +26,18 @@ Menu()
     {
         std::cout << "Failed to load menu music!" << std::endl;
     }
-
+    startmusic.openFromFile("asserts/start.wav");
+    quitmusic.openFromFile("asserts/start.wav");
     //background.setScale(2.15, 1.5);
 }
-void names_menu()
+bool getMusicFlag()
 {
+    return musicflag_bg;
+}
+void names_menu()
+{   
+    for (int i = 0; i < 2; i++)
+        playersName[i] = "";
     Font font;
     font.loadFromFile("font2.ttf");
 
@@ -126,11 +134,12 @@ bool display_menu()
            	Event e;
            	while (window.pollEvent(e))
            	{ 
-           		if (e.type == Event::Closed)                  
-               		window.close();  
-               				
-               	else if (e.key.code == Keyboard::Escape)
-               		window.close(); 
+                if (e.type == Event::Closed)
+                    //window.close();  
+                    exit(11);
+                else if (e.key.code == Keyboard::Escape)
+                    exit(11);
+                //window.close(); 
                		
 
 
@@ -144,6 +153,8 @@ bool display_menu()
                     if (mousePos.x >= 254 && mousePos.x <= 439 && mousePos.y >= 282 && mousePos.y <= 345)
                     {
                     std::    cout << "Play";
+                    startmusic.stop();
+                    startmusic.play();
                     return 1; 
                     window.close();
                        
@@ -151,7 +162,9 @@ bool display_menu()
 
                     if (mousePos.x >= 254 && mousePos.x <= 439 && mousePos.y >= 376 && mousePos.y <= 437)
                     {
-                        std::cout << "Exit"; 
+                        std::cout << "Exit";
+                        quitmusic.stop();
+                        quitmusic.play();
                         //window.close();
                     }
 
@@ -159,11 +172,14 @@ bool display_menu()
                     {
                       std::  cout << "sound ON";
                       music.play();
+                      musicflag_bg = 1;
                     }
                     if (mousePos.x >= 360 && mousePos.x <= 430 && mousePos.y >= 468 && mousePos.y <= 535)
                     {
                         std::cout << "sound OFF ";
                         music.pause();
+                        musicflag_bg =0;
+
 
                     }
 
