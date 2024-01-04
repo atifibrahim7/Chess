@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include<time.h>
 #include<iostream>
+#include<memory>
 #include "menu.h"
 #include "pieces.h"
 #include "rook.h"
@@ -27,10 +28,17 @@ using namespace std;
 const char title[] = "Chess Game";
 const int B_WIDTH = 8;
 const int B_HEIGHT = 8;
-const int B_SIZE = 64;
+const int B_SIZE = 76;
+const float SQUARE = B_SIZE / B_WIDTH;
+const int CENTRE = SQUARE / 2;
 const int HEIGHT_PIXELS = 512;
 const int SIZE_PIXELS = 512/8;
+const int offset_x = 335;
+const int offset_y = 55;
+const int SQUARE_SIZE = 76;
 
+
+template<class T1, class T2>
 class Game
 {
 
@@ -41,6 +49,8 @@ Color col2 = Color::Black;
 Sprite background; //Game background sprite
 Texture bg_texture;
 
+T1 posx_a;
+T2 posy_a;
 bool selected;
 bool turn;
 int selected_piece;
@@ -52,30 +62,36 @@ bool check_white;
 bool check_black;
 bool final_check;
 
-Menu* m;
-Pieces *w_rook[2];
-Pieces *b_rook[2];
-Pieces *w_king;
-Pieces *b_king;
-Pieces *w_queen;
-Pieces *b_queen;
-Pieces *w_bishop[2];
-Pieces *b_bishop[2];
-Pieces *w_knight[2];
-Pieces *b_knight[2];
-Pieces *w_pawn[8];
-Pieces *b_pawn[8];
-Pieces *white_piece[16];
-Pieces *black_piece[16];
+    std::shared_ptr<Menu<T1, T2>> m;
+    std::shared_ptr<Pieces<T1, T2>> w_rook[2];
+    std::shared_ptr<Pieces<T1, T2>> b_rook[2];
+    std::shared_ptr<Pieces<T1, T2>> w_king;
+    std::shared_ptr<Pieces<T1, T2>> b_king;
+    std::shared_ptr<Pieces<T1, T2>> w_queen;
+    std::shared_ptr<Pieces<T1, T2>> b_queen;
+    std::shared_ptr<Pieces<T1, T2>> w_bishop[2];
+    std::shared_ptr<Pieces<T1, T2>> b_bishop[2];
+    std::shared_ptr<Pieces<T1, T2>> w_knight[2];
+    std::shared_ptr<Pieces<T1, T2>> b_knight[2];
+    std::shared_ptr<Pieces<T1, T2>> w_pawn[8];
+    std::shared_ptr<Pieces<T1, T2>> b_pawn[8];
+    Pieces<T1, T2>* white_piece[16];
+    Pieces<T1, T2>* black_piece[16];
+
+float coord_x[8];
+float coord_y[8];
 
 public:
-
+    void name_menu()
+    {
+        m->names_menu();
+    }
 // MAIN CONSTRUCTOR
 Game()
 {
-    bg_texture.loadFromFile("img/background.jpg");
+    bg_texture.loadFromFile("asserts/Board.png");
     background.setTexture(bg_texture);
-    background.setScale(1, 1);
+    //background.setScale(0.73, 0.73);
 
     selected = 0;
     selected_piece = -1;
@@ -88,58 +104,109 @@ Game()
     check_black = 0;
     final_check = 1;
 
-    m = new Menu;
+        m = std::make_shared<Menu<T1, T2>>();
 
-    w_king = new W_King("img/w_king.png");
-    b_king = new B_King("img/b_king.png");
+        w_king = std::make_shared<W_King<T1, T2>>("images/Peices/King W.png");
+        b_king = std::make_shared<B_King<T1, T2>>("images/Peices/King B.png");
 
-    w_queen = new W_Queen("img/w_queen.png");
-    b_queen = new B_Queen("img/b_queen.png");
+        w_queen = std::make_shared<W_Queen<T1, T2>>("images/Peices/Queen W.png");
+        b_queen = std::make_shared<B_Queen<T1, T2>>("images/Peices/Queen B.png");
 
-    for (int i=0; i<2; i++)
-    {
-        w_rook[i] = new W_Rook("img/w_rook.png");
-        b_rook[i] = new B_Rook("img/b_rook.png");
+        for (int i = 0; i < 2; i++)
+        {
+            w_rook[i] = std::make_shared<W_Rook<T1, T2>>("images/Peices/Rook W.png");
+            b_rook[i] = std::make_shared<B_Rook<T1, T2>>("images/Peices/Rook B.png");
 
-        w_bishop[i] = new W_Bishop("img/w_bishop.png");
-        b_bishop[i] = new B_Bishop("img/b_bishop.png");
+            w_bishop[i] = std::make_shared<W_Bishop<T1, T2>>("images/Peices/Bishop W.png");
+            b_bishop[i] = std::make_shared<B_Bishop<T1, T2>>("images/Peices/Bishop B.png");
 
-        w_knight[i] = new W_Knight("img/w_knight.png");
-        b_knight[i] = new B_Knight("img/b_knight.png");
+            w_knight[i] = std::make_shared<W_Knight<T1, T2>>("images/Peices/Knight W.png");
+            b_knight[i] = std::make_shared<B_Knight<T1, T2>>("images/Peices/Knight B.png");
+        }
 
-    }
+        // for (int i=0; i<16; i++)
+        // {
+        //     white_piece[i] = make_shared<Pieces>();
+        //     black_piece[i] = make_shared<Pieces>();
+        // }
 
-    for (int i=0; i<8; i++)
-    {
-        w_pawn[i] = new W_Pawn("img/w_pawn.png");
-        b_pawn[i] = new B_Pawn("img/b_pawn.png");
-        white_piece[i+8] = w_pawn[i];
-        black_piece[i+8] = b_pawn[i];
-    }
+        for (int i = 0; i < 8; i++)
+        {
+            w_pawn[i] = std::make_shared<W_Pawn<T1, T2>>("images/Peices/Pawn W.png");
+            b_pawn[i] = std::make_shared<B_Pawn<T1, T2>>("images/Peices/Pawn B.png");
+            // white_piece[i + 8] = std::move(w_pawn[i]);
+            // black_piece[i + 8] = std::move(b_pawn[i]);
+            white_piece[i+8] = w_pawn[i].get();
+            black_piece[i+8] = b_pawn[i].get();
+            // white_piece[i+8] = std::make_shared<Pieces>(std::move(w_pawn[i]));
+            // black_piece[i+8] = std::make_shared<Pieces>(std::move(b_pawn[i]));
+        }
 
-    white_piece[0] = w_rook[0];
-    white_piece[1] = w_knight[0];
-    white_piece[2] = w_bishop[0];
-    white_piece[3] = w_queen;
-    white_piece[4] = w_king;
-    white_piece[5] = w_bishop[1];
-    white_piece[6] = w_knight[1];
-    white_piece[7] = w_rook[1];
 
-    black_piece[0] = b_rook[0];
-    black_piece[1] = b_knight[0];
-    black_piece[2] = b_bishop[0];
-    black_piece[3] = b_queen;
-    black_piece[4] = b_king;
-    black_piece[5] = b_bishop[1];
-    black_piece[6] = b_knight[1];
-    black_piece[7] = b_rook[1];
+    white_piece[0] = w_rook[0].get();
+    white_piece[1] = w_knight[0].get();
+    white_piece[2] = w_bishop[0].get();
+    white_piece[3] = w_queen.get();
+    white_piece[4] = w_king.get();
+    white_piece[5] = w_bishop[1].get();
+    white_piece[6] = w_knight[1].get();
+    white_piece[7] = w_rook[1].get();
+
+    black_piece[0] = b_rook[0].get();
+    black_piece[1] = b_knight[0].get();
+    black_piece[2] = b_bishop[0].get();
+    black_piece[3] = b_queen.get();
+    black_piece[4] = b_king.get();
+    black_piece[5] = b_bishop[1].get();
+    black_piece[6] = b_knight[1].get();
+    black_piece[7] = b_rook[1].get();
+
+        // white_piece[0] = std::move(w_rook[0]);
+        // white_piece[1] = std::move(w_knight[0]);
+        // white_piece[2] = std::move(w_bishop[0]);
+        // white_piece[3] = std::move(w_queen);
+        // white_piece[4] = std::move(w_king);
+        // white_piece[5] = std::move(w_bishop[1]);
+        // white_piece[6] = std::move(w_knight[1]);
+        // white_piece[7] = std::move(w_rook[1]);
+
+        // black_piece[0] = std::move(b_rook[0]);
+        // black_piece[1] = std::move(b_knight[0]);
+        // black_piece[2] = std::move(b_bishop[0]);
+        // black_piece[3] = std::move(b_queen);
+        // black_piece[4] = std::move(b_king);
+        // black_piece[5] = std::move(b_bishop[1]);
+        // black_piece[6] = std::move(b_knight[1]);
+        // black_piece[7] = std::move(b_rook[1]);
+
+        // white_piece[0] = std::make_shared<Pieces>(std::move(w_rook[0]));
+        // white_piece[1] = std::make_shared<Pieces>(std::move(w_knight[0]));
+        // white_piece[2] = std::make_shared<Pieces>(std::move(w_bishop[0]));
+        // white_piece[3] = std::make_shared<Pieces>(std::move(w_queen));
+        // white_piece[4] = std::make_shared<Pieces>(std::move(w_king));
+        // white_piece[5] = std::make_shared<Pieces>(std::move(w_bishop[1]));
+        // white_piece[6] = std::make_shared<Pieces>(std::move(w_knight[1]));
+        // white_piece[7] = std::make_shared<Pieces>(std::move(w_rook[1]));
+
+        // black_piece[0] = std::make_shared<Pieces>(std::move(b_rook[0]));
+        // black_piece[1] = std::make_shared<Pieces>(std::move(b_knight[0]));
+        // black_piece[2] = std::make_shared<Pieces>(std::move(b_bishop[0]));
+        // black_piece[3] = std::make_shared<Pieces>(std::move(b_queen));
+        // black_piece[4] = std::make_shared<Pieces>(std::move(b_king));
+        // black_piece[5] = std::make_shared<Pieces>(std::move(b_bishop[1]));
+        // black_piece[6] = std::make_shared<Pieces>(std::move(b_knight[1]));
+        // black_piece[7] = std::make_shared<Pieces>(std::move(b_rook[1]));
+
+        // The rest of the pieces should be assigned similarly.
    
 }
 
 // DRAWING BOARD HERE//
 void draw_board(RenderTarget& window)
 {
+
+
+
     for (int i=0; i<B_HEIGHT; i++)
     {
         bool color_flag = 0;
@@ -150,8 +217,8 @@ void draw_board(RenderTarget& window)
         for (int j=0; j<B_WIDTH; j++)
         {
            // b_squares[i][j].setScale(, 5);
-            b_squares[i][j].setPosition(Vector2f(j*64, i*64));
-            b_squares[i][j].setSize(sf::Vector2f(64, 64));
+            b_squares[i][j].setPosition(Vector2f(j*SQUARE_SIZE + offset_x, i*SQUARE_SIZE + offset_y));
+            b_squares[i][j].setSize(sf::Vector2f(SQUARE_SIZE, SQUARE_SIZE));
             
             if (!color_flag)
                 b_squares[i][j].setFillColor(col2);
@@ -172,13 +239,12 @@ bool start_menu()
 // SET POSITIONS OF PIECES
 void set_positions()
 {
-    float coord_x[8];
-    float coord_y[8];
+
 
     for (int i=0; i<8; i++)
     {
-        coord_x[i] = b_squares[0][i].getPosition().x + 4; 
-        coord_y[i] = b_squares[i][0].getPosition().y + 4; 
+        coord_x[i] = b_squares[0][i].getPosition().x + CENTRE; 
+        coord_y[i] = b_squares[i][0].getPosition().y + CENTRE; 
     }
 
     w_rook[0]->sprite.setPosition(coord_x[0], coord_y[7]);
@@ -302,31 +368,38 @@ bool find_check()
 
     for (int i=0; i<16; i++)
     {
-        if (i == 4)
-            continue;
-
-        if (white_piece[i]->flag_alive == 0)
-            continue;
+        // if (i == 4)
+        //     continue;
         
-        if (black_piece[i]->flag_alive == 0)
-            continue;
-
-        if (!white_piece[i]->enemy_collision(selected_piece, white_piece[i]->sprite.getPosition().x, white_piece[i]->sprite.getPosition().y, b_king->sprite.getPosition().x, b_king->sprite.getPosition().y, black_piece, white_piece) 
-        &&  (white_piece[i]->legal_move(selected_piece, white_piece[i]->sprite.getPosition().x, white_piece[i]->sprite.getPosition().y, b_king->sprite.getPosition().x, b_king->sprite.getPosition().y)))
+        //if (!turn)
         {
-            cout<<"black check";
-            check_black = 1;
-            check_white = 0;
-            return check_black; 
+            
+            if (white_piece[i]->flag_alive == 0)
+                continue;
+
+            if (!white_piece[i]->enemy_collision(selected_piece, white_piece[i]->sprite.getPosition().x, white_piece[i]->sprite.getPosition().y, b_king->sprite.getPosition().x, b_king->sprite.getPosition().y, black_piece, white_piece) 
+            &&  (white_piece[i]->legal_move(selected_piece, white_piece[i]->sprite.getPosition().x, white_piece[i]->sprite.getPosition().y, b_king->sprite.getPosition().x, b_king->sprite.getPosition().y)))
+            {
+                cout<<"black check";
+                check_black = 1;
+                check_white = 0;
+                return check_black; 
+            }
         }
 
-        if (!black_piece[i]->enemy_collision(selected_piece, black_piece[i]->sprite.getPosition().x, black_piece[i]->sprite.getPosition().y, w_king->sprite.getPosition().x, w_king->sprite.getPosition().y, white_piece, black_piece)
-        &&  (black_piece[i]->legal_move(selected_piece, black_piece[i]->sprite.getPosition().x, black_piece[i]->sprite.getPosition().y, w_king->sprite.getPosition().x, w_king->sprite.getPosition().y)))
-        {  
-            cout<<"white check";
-            check_white = 1;
-            check_black = 0;
-            return check_white;
+       // else
+        {
+            if (black_piece[i]->flag_alive == 0)
+                continue;
+
+            if (!black_piece[i]->enemy_collision(selected_piece, black_piece[i]->sprite.getPosition().x, black_piece[i]->sprite.getPosition().y, w_king->sprite.getPosition().x, w_king->sprite.getPosition().y, white_piece, black_piece)
+            &&  (black_piece[i]->legal_move(selected_piece, black_piece[i]->sprite.getPosition().x, black_piece[i]->sprite.getPosition().y, w_king->sprite.getPosition().x, w_king->sprite.getPosition().y)))
+            {  
+                cout<<"white check";
+                check_white = 1;
+                check_black = 0;
+                return check_white;
+            }
         }
     }
 
@@ -368,69 +441,175 @@ bool find_check()
 //     return 0;
 // }
 
+// bool check_mate()
+// {
+//     final_check = 1;
+
+//     for (int i=0; i<16; i++)
+//     {
+//         if (white_piece[i]->flag_alive == 0)
+//             continue;
+        
+//         if (black_piece[i]->flag_alive == 0)
+//             continue;
+        
+//         for (int y=0; y<8; y++)
+//         {
+
+//             for (int x=0; x<8; x++)
+//             {
+
+//                 //if (!turn)
+//                 {
+//                     int orig_posX = white_piece[i]->sprite.getPosition().x; 
+//                     int orig_posY = white_piece[i]->sprite.getPosition().y;
+
+//                     if ((white_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y]))
+//                      && (!white_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y], black_piece, white_piece)))
+//                     {
+//                         white_piece[i]->sprite.setPosition(coord_x[x], coord_y[y]);
+//                         find_check();
+//                         if (check_white)
+//                         {
+//                             white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+//                         }
+
+//                         else
+//                         {
+//                             white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+//                             final_check = 0;
+//                             cout<<final_check;
+//                             break;
+//                             //return final_check;
+//                         }
+//                     }
+//                 }
+
+//                 //else if (turn)
+//                 {
+//                     int orig_posX = black_piece[i]->sprite.getPosition().x; 
+//                     int orig_posY = black_piece[i]->sprite.getPosition().y;
+
+//                     if ((black_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y])) 
+//                     && (!black_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y], white_piece, black_piece))) 
+                    
+//                     {
+//                         black_piece[i]->sprite.setPosition(coord_x[x], coord_y[y]);
+//                         find_check();
+//                         if (check_black)
+//                         {
+//                             black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+//                         }
+
+//                         else
+//                         {
+//                             black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+//                             final_check = 0;
+//                             break;
+//                            // return final_check;
+//                         }
+//                     }
+//                 }
+                
+//             }
+//         }
+//     }
+//     cout<<final_check;
+//     return final_check;
+// }
+
 bool check_mate()
 {
     final_check = 1;
 
     for (int i=0; i<16; i++)
     {
-        if (white_piece[i]->flag_alive == 0)
-            continue;
-        
-        if (black_piece[i]->flag_alive == 0)
-            continue;
-        
         for (int y=0; y<8; y++)
         {
 
             for (int x=0; x<8; x++)
             {
 
-                if (!turn)
+                if (turn)
                 {
+
+                    cout<<"CHECKING FOR BLACK PIECE";
+                    if (white_piece[i]->flag_alive == 0)
+                        continue;
+
+                    if (i == 4)
+                        continue;
+
                     int orig_posX = white_piece[i]->sprite.getPosition().x; 
                     int orig_posY = white_piece[i]->sprite.getPosition().y;
 
-                    if (!white_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4, black_piece, white_piece) 
-                    &&  (white_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4)))
+                    if (white_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y]))
                     {
-                        white_piece[i]->sprite.setPosition(64*x + 4, 64*y + 4);
-                        find_check();
-                        if (check_white)
+                        if (!white_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y], black_piece, white_piece))
                         {
-                            white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-                        }
+                            white_piece[i]->sprite.setPosition(coord_x[x], coord_y[y]);
+                            find_check();
+                            if (check_white)
+                            {
+                                white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+                                cout<<" HELLO ";
+                            }
 
-                        else
-                        {
-                            white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-                            final_check = 0;
-                            cout<<final_check;
-                            return final_check;
+                            else
+                            {
+                                if (i==4)
+                                {
+                                    if (white_piece[i]->capture_piece_white(black_piece, coord_x[x], coord_y[y]))
+                                    {
+                                        cout<<">>>>?????";
+                                        find_check();
+                                        if (check_white);
+                                        continue;
+                                    }
+                                    cout<<"PLS KING";
+                                    find_check();
+                                    if (check_white)
+                                        continue;
+                                }
+                                white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+                                final_check = 0;
+                                cout<<"BINGO WHITE";
+                                cout<<final_check;
+                                return final_check;
+                            }
                         }
                     }
                 }
 
-                else if (turn)
+                else if (!turn)
                 {
+                    cout<<"WHITE CHECKING";
+                    if (black_piece[i]->flag_alive == 0)
+                        continue;
+
                     int orig_posX = black_piece[i]->sprite.getPosition().x; 
                     int orig_posY = black_piece[i]->sprite.getPosition().y;
 
-                    if (!black_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4, white_piece, black_piece) 
-                    &&  (black_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4)))
+                    if (black_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y]))
                     {
-                        black_piece[i]->sprite.setPosition(64*x + 4, 64*y + 4);
-                        find_check();
-                        if (check_black)
+                        if (!black_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, coord_x[x], coord_y[y], white_piece, black_piece))
                         {
-                            black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-                        }
+                            black_piece[i]->sprite.setPosition(coord_x[x], coord_y[y]);
+                            find_check();
+                            if (check_black)
+                            {
+                                black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+                                cout<< "HELLO BLACK PIECE";
+                            }
 
-                        else
-                        {
-                            black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-                            final_check = 0;
-                            return final_check;
+                            else
+                            {
+
+                                black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
+                                final_check = 0;
+                                cout<<"BINGO PLS WORK";
+                                return final_check;
+                            }
                         }
                     }
                 }
@@ -444,87 +623,14 @@ bool check_mate()
 
 // bool check_mate()
 // {
-//     final_check = 1;
-
-//     for (int i=0; i<16; i++)
-//     {
-//         for (int y=0; y<8; y++)
-//         {
-
-//             for (int x=0; x<8; x++)
-//             {
-
-//                 if (!turn)
-//                 {
-//                     int orig_posX = white_piece[i]->sprite.getPosition().x; 
-//                     int orig_posY = white_piece[i]->sprite.getPosition().y;
-
-//                     if (white_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4))
-//                     {
-//                         if (!white_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4, black_piece, white_piece))
-//                         {
-//                             white_piece[i]->sprite.setPosition(64*x + 4, 64*y + 4);
-//                             find_check();
-//                             if (check_white)
-//                             {
-//                                 white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-//                                 cout<<" HELLO ";
-//                             }
-
-//                             else
-//                             {
-//                                 white_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-//                                 final_check = 0;
-//                                 cout<<final_check;
-//                                 return final_check;
-//                             }
-//                         }
-//                     }
-//                 }
-
-//                 else if (turn)
-//                 {
-//                     int orig_posX = black_piece[i]->sprite.getPosition().x; 
-//                     int orig_posY = black_piece[i]->sprite.getPosition().y;
-
-//                     if (black_piece[i]->legal_move(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4))
-//                     {
-//                         if (!black_piece[i]->enemy_collision(selected_piece, orig_posX, orig_posY, 64*x + 4, 64*y + 4, white_piece, black_piece))
-//                         {
-//                             black_piece[i]->sprite.setPosition(64*x + 4, 64*y + 4);
-//                             find_check();
-//                             if (check_black)
-//                             {
-//                                 black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-//                             }
-
-//                             else
-//                             {
-//                                 black_piece[i]->sprite.setPosition(orig_posX, orig_posY);
-//                                 final_check = 0;
-//                                 return final_check;
-//                             }
-//                         }
-//                     }
-//                 }
-                
-//             }
-//         }
-//     }
-//     cout<<final_check;
-//     return final_check;
-// }
-
-// bool check_mate()
-// {
 //     final_check = true;
 
 //     for (int i = 0; i < 16; i++)
 //     {
-//         if (i == 4)
-//             continue;
+//         // if (i == 4)
+//         //     continue;
 
-//         Pieces *piece = !turn ? white_piece[i] : black_piece[i];
+//         Pieces *piece = turn ? white_piece[i] : black_piece[i];
 //         int orig_posX = piece->sprite.getPosition().x;
 //         int orig_posY = piece->sprite.getPosition().y;
 
@@ -532,19 +638,19 @@ bool check_mate()
 //         {
 //             for (int x = 0; x < 8; x++)
 //             {
-//                 if (piece->legal_move(selected_piece, orig_posX, orig_posY, 64 * x + 4, 64 * y + 4))
+//                 if (piece->legal_move(selected_piece, orig_posX, orig_posY, B_SIZE * x + CENTRE, B_SIZE * y + CENTRE))
 //                 {
-//                     if (!piece->enemy_collision(selected_piece, orig_posX, orig_posY, 64 * x + 4, 64 * y + 4, !turn ? black_piece : white_piece, !turn ? white_piece : black_piece))
+//                     if (!piece->enemy_collision(selected_piece, orig_posX, orig_posY, B_SIZE * x + CENTRE, B_SIZE * y + CENTRE, turn ? black_piece : white_piece, turn ? white_piece : black_piece))
 //                     {
 //                         // Simulate the move
-//                         piece->sprite.setPosition(64 * x + 4, 64 * y + 4);
+//                         piece->sprite.setPosition(B_SIZE * x + CENTRE, B_SIZE * y + CENTRE);
 //                         find_check();
 
-//                         if (!turn && check_white)
+//                         if (!turn && !check_white && check_black)
 //                         {
 //                             piece->sprite.setPosition(orig_posX, orig_posY);
 //                         }
-//                         else if (turn && check_black)
+//                         else if (turn && !check_black && check_white)
 //                         {
 //                             piece->sprite.setPosition(orig_posX, orig_posY);
 //                         }
@@ -631,11 +737,11 @@ void select_piece(int posX, int posY, RenderWindow& window)
 
     for (int i=0; i<8; i++)
     {
-        if (posY >= i*64 && posY < (i+1)*64)
-            select_posY = b_squares[i][0].getPosition().y + 4;
+        if (posY >= (i)*B_SIZE + offset_y && posY < (i+1)*B_SIZE + offset_y)
+            select_posY = b_squares[i][0].getPosition().y + CENTRE;
 
-        if (posX >= i*64 && posX < (i+1)*64)
-            select_posX = b_squares[0][i].getPosition().x + 4;
+        if (posX >= (i)*B_SIZE +offset_x && posX < (i+1)*B_SIZE+offset_x)
+            select_posX = b_squares[0][i].getPosition().x + CENTRE;
     }
 
     if (!turn)
@@ -646,6 +752,7 @@ void select_piece(int posX, int posY, RenderWindow& window)
             {
                 selected_piece = i;
                 selected = 1;
+                //cout<<"YEET";
                 break;
             }
         }
@@ -663,22 +770,24 @@ void select_piece(int posX, int posY, RenderWindow& window)
             }
         }
     }
+
+    //cout<<"YEET";
 }
 
 
 // MOVE PIECE
-void move_piece(int posX, int posY, RenderWindow& window)
+void move_piece(int posX, int posY, RenderWindow& window, Event& e)
 {
     int track = -1;
     bool capture = 0;
 
     for (int i=0; i<8; i++)
     {
-        if (posY >= i*64 && posY < (i+1)*64)
-            place_posY = b_squares[i][0].getPosition().y + 4;
+        if (posY >= i*B_SIZE + offset_y && posY < (i+1)*B_SIZE +offset_y)
+            place_posY = b_squares[i][0].getPosition().y + CENTRE;
 
-        if (posX >= i*64 && posX < (i+1)*64)
-            place_posX = b_squares[0][i].getPosition().x + 4;
+        if (posX >= i*B_SIZE+offset_x && posX < (i+1)*B_SIZE+offset_x)
+            place_posX = b_squares[0][i].getPosition().x + CENTRE;
         
     }
 
@@ -694,8 +803,17 @@ void move_piece(int posX, int posY, RenderWindow& window)
                     track = i;
             }
 
-            if (white_piece[selected_piece]->capture_piece(black_piece, place_posX, place_posY))
+            if (white_piece[selected_piece]->capture_piece_white(black_piece, place_posX, place_posY))
                 capture = 1;
+
+
+            for (int i=0; i<8; i++)
+            {
+                if (selected_piece >= 8)
+                {
+                    check_upgrade_white(e);
+                }
+            }
 
             find_check();
             if (check_white)
@@ -704,24 +822,32 @@ void move_piece(int posX, int posY, RenderWindow& window)
                 if (capture == 1)
                 {
                     black_piece[track]->sprite.setPosition(place_posX, place_posY);
-                    black_piece[track]->sprite.setScale(0.425, 0.425);
-                    black_piece[track]->flag_alive = 1;
+                    black_piece[track]->sprite.setScale(0.95, 0.95);
+                    black_piece[track]->flag_alive = 1;   
                 }
+                cout<<"yay2";
+                return;
+            }
+
+            if (check_black)
+            {
+                //cout << "Check! You can't move there." << endl;
                 check_mate();
                 if (final_check)
                 {
                     cout<<"Checkmate";
-                    window.close();
-                    m->gameover();
+                   // window.close();
+                   // m->gameover();
                 }
-
-                return;
             }
+
+                
+        }
 
             // if (white_piece[selected_piece]->sprite.getPosition().x == place_posX && white_piece[selected_piece]->sprite.getPosition().y == place_posY)
             //     white_piece[selected_piece]->capture_piece(black_piece, place_posX, place_posY);    // CHECK AND UPDATE IF CAPTURED
             
-        }
+        
         else
         {
             black_piece[selected_piece]->sprite.setPosition(place_posX, place_posY); 
@@ -732,8 +858,16 @@ void move_piece(int posX, int posY, RenderWindow& window)
                     track = i;
             }
 
-            if (black_piece[selected_piece]->capture_piece(white_piece, place_posX, place_posY))
+            if (black_piece[selected_piece]->capture_piece_black(white_piece, place_posX, place_posY))
                 capture = 1;
+
+            for (int i=0; i<8; i++)
+            {
+                if (selected_piece >= 8)
+                {
+                    check_upgrade_black(e);
+                }
+            }
 
             find_check(); 
             if (check_black)
@@ -742,37 +876,104 @@ void move_piece(int posX, int posY, RenderWindow& window)
                 if (capture == 1)
                 {
                     white_piece[track]->sprite.setPosition(place_posX, place_posY);
-                    white_piece[track]->sprite.setScale(0.425, 0.425);
+                    white_piece[track]->sprite.setScale(0.95, 0.95);
                     white_piece[track]->flag_alive = 1;
                 }
+                cout<<"yay2";
+                return; 
+            }
+
+            if (check_white)
+            {
+                cout<<"pls";
                 check_mate();
                 if (final_check)
                 {
                     cout<<"Checkmate";
-                    window.close();
-                    m->gameover();
+                    //window.close();
+                   // m->gameover();
                 }
-                
-                return;    
             }
+                
+                   
+        
 
             // if (black_piece[selected_piece]->sprite.getPosition().x == place_posX && black_piece[selected_piece]->sprite.getPosition().y == place_posY)
             //     black_piece[selected_piece]->capture_piece(white_piece, place_posX, place_posY);
               
         }
 
-        
+        //cout<<"NOOO";
         turn = !turn;
     }
     
     selected = 0;
 }
 
+void check_upgrade_white(Event& e)
+{
+    float tempPos_x = white_piece[selected_piece]->sprite.getPosition().x;
+    float tempPos_y = white_piece[selected_piece]->sprite.getPosition().y;
+    float temp_select = selected_piece;
+
+        if (white_piece[selected_piece]->sprite.getPosition().y == coord_y[0] && !white_piece[selected_piece]->upgrade_flag)
+        {
+            white_piece[selected_piece];
+            //std::shared_ptr<Pieces> temp_piece;
+            Pieces<T1, T2>* temp_piece;
+            // if (e.key.code == sf::Keyboard::Num1)
+           // temp_piece = std::make_shared<W_Queen>("images/Peices/Queen W.png");
+            temp_piece = new W_Queen<T1, T2>("images/Peices/Queen W.png");
+            // if (e.key.code == sf::Keyboard::Num2)
+            //     temp_piece = new W_Queen("images/Peices/Rook W.png");
+
+            // if (e.key.code == sf::Keyboard::Num3)
+            //     temp_piece = new W_Queen("images/Peices/Bishop W.png");
+
+            // if (e.key.code == sf::Keyboard::Num4)
+            //     temp_piece = new W_Queen("images/Peices/Knight W.png");
+
+            //white_piece[selected_piece] = std::move(temp_piece);
+            white_piece[selected_piece] = temp_piece;
+            white_piece[selected_piece]->upgrade_flag = 1;
+            white_piece[selected_piece]->sprite.setPosition(tempPos_x, tempPos_y);
+        }
+}
+
+void check_upgrade_black(Event& e)
+{
+    float tempPos_x = black_piece[selected_piece]->sprite.getPosition().x;
+    float tempPos_y = black_piece[selected_piece]->sprite.getPosition().y;
+    float temp_select = selected_piece;
+
+        if (black_piece[selected_piece]->sprite.getPosition().y == coord_y[7] && !black_piece[selected_piece]->upgrade_flag)
+        {
+            black_piece[selected_piece];
+            Pieces<T1, T2>* temp_piece;
+            // if (e.key.code == sf::Keyboard::Num1)
+                //temp_piece = make_shared<B_Queen>("images/Peices/Queen B.png");
+                temp_piece = new B_Queen<T1, T2>("images/Peices/Queen B.png");
+ 
+            // if (e.key.code == sf::Keyboard::Num2)
+            //     temp_piece = new W_Queen("images/Peices/Rook W.png");
+
+            // if (e.key.code == sf::Keyboard::Num3)
+            //     temp_piece = new W_Queen("images/Peices/Bishop W.png");
+
+            // if (e.key.code == sf::Keyboard::Num4)
+            //     temp_piece = new W_Queen("images/Peices/Knight W.png");
+
+            black_piece[selected_piece] = temp_piece;
+            black_piece[selected_piece]->upgrade_flag = 1;
+            black_piece[selected_piece]->sprite.setPosition(tempPos_x, tempPos_y);
+        }
+}
+
 /////////////////////// GAME FUNCTION ////////////////////////////////////////////////
 void start_game()
 {
     srand(time(0));
-    RenderWindow window(VideoMode(768, 512), title);
+    RenderWindow window(VideoMode(1280, 720), title);
     Clock clock;
     float timer=0;
     
@@ -801,7 +1002,9 @@ void start_game()
                             select_piece(click_posX, click_posY, window);
 
                         else
-                            move_piece(click_posX, click_posY, window);
+                        {
+                            move_piece(click_posX, click_posY, window, e);
+                        }
                     }
                 }               	    
             }
@@ -832,37 +1035,44 @@ void start_game()
         window.clear(Color::Black); //clears the screen
         window.draw(background);  // setting background
 
-        for (int i=0; i<B_HEIGHT; i++)
+        // for (int i=0; i<B_HEIGHT; i++)
+        // {
+        //     for (int j=0; j<B_WIDTH; j++)
+        //         window.draw(b_squares[i][j]);
+        // }
+
+        // window.draw(w_rook[0]->sprite);
+        // window.draw(w_rook[1]->sprite);
+        // window.draw(b_rook[0]->sprite);
+        // window.draw(b_rook[1]->sprite);
+
+        // window.draw(w_king->sprite);
+        // window.draw(b_king->sprite);
+
+        // window.draw(w_queen->sprite);
+        // window.draw(b_queen->sprite);
+
+        // window.draw(w_bishop[0]->sprite);
+        // window.draw(w_bishop[1]->sprite);
+        // window.draw(b_bishop[0]->sprite);
+        // window.draw(b_bishop[1]->sprite);
+
+        // window.draw(w_knight[0]->sprite);
+        // window.draw(w_knight[1]->sprite);
+        // window.draw(b_knight[0]->sprite);
+        // window.draw(b_knight[1]->sprite);
+
+        // for (int i=0; i<8; i++)
+        // {
+        //     window.draw(w_pawn[i]->sprite);
+        //     window.draw(b_pawn[i]->sprite);
+        // }
+
+        for (int i=0; i<16; i++)
         {
-            for (int j=0; j<B_WIDTH; j++)
-                window.draw(b_squares[i][j]);
-        }
+            window.draw(white_piece[i]->sprite);
+            window.draw(black_piece[i]->sprite);
 
-        window.draw(w_rook[0]->sprite);
-        window.draw(w_rook[1]->sprite);
-        window.draw(b_rook[0]->sprite);
-        window.draw(b_rook[1]->sprite);
-
-        window.draw(w_king->sprite);
-        window.draw(b_king->sprite);
-
-        window.draw(w_queen->sprite);
-        window.draw(b_queen->sprite);
-
-        window.draw(w_bishop[0]->sprite);
-        window.draw(w_bishop[1]->sprite);
-        window.draw(b_bishop[0]->sprite);
-        window.draw(b_bishop[1]->sprite);
-
-        window.draw(w_knight[0]->sprite);
-        window.draw(w_knight[1]->sprite);
-        window.draw(b_knight[0]->sprite);
-        window.draw(b_knight[1]->sprite);
-
-        for (int i=0; i<8; i++)
-        {
-            window.draw(w_pawn[i]->sprite);
-            window.draw(b_pawn[i]->sprite);
         }
 
         window.display();  //Displying all the sprites
@@ -871,32 +1081,32 @@ void start_game()
 
 ~Game()
 {
-    delete m;
-    delete b_king;
-    delete w_king;
-    delete b_queen;
-    delete w_queen;
+    // delete m;
+    // delete b_king;
+    // delete w_king;
+    // delete b_queen;
+    // delete w_queen;
 
-    for (int i=0; i<2; i++)
-    {
-        delete w_rook[i];
-        delete b_rook[i];
-        delete w_bishop[i];
-        delete b_bishop[i];
-        delete w_knight[i];
-        delete b_knight[i];
-    }
+    // for (int i=0; i<2; i++)
+    // {
+    //     delete w_rook[i];
+    //     delete b_rook[i];
+    //     delete w_bishop[i];
+    //     delete b_bishop[i];
+    //     delete w_knight[i];
+    //     delete b_knight[i];
+    // }
 
-    for (int i=0; i<8; i++)
-    {
-        delete w_pawn[i];
-        delete b_pawn[i];
-    }
+    // for (int i=0; i<8; i++)
+    // {
+    //     delete w_pawn[i];
+    //     delete b_pawn[i];
+    // }
 
-    for (int i=0; i<16; i++)
-    {
-        delete white_piece[i];
-        delete black_piece[i];
-    }
+    // for (int i=0; i<16; i++)
+    // {
+    //     delete white_piece[i];
+    //     delete black_piece[i];
+    // }
 }
 };

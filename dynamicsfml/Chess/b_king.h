@@ -6,17 +6,17 @@
 #include "king.h"
 using namespace sf;
 
-class B_King : public King
+template<class T, class U>
+class B_King : public King<T, U>
 {
 
 public:
 
 B_King(std::string png_path) 
 {
-    tex.loadFromFile(png_path);
-	sprite.setTexture(tex);
-	// sprite.setScale(0.75,0.75);
-}
+    this->tex.loadFromFile(png_path);
+	this->sprite.setTexture(this->tex);
+    this->sprite.setScale(0.95, 0.95);}
 
 ~B_King()
 {

@@ -19,30 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bishop.h" />
-    <ClInclude Include="b_bishop.h" />
-    <ClInclude Include="b_king.h" />
-    <ClInclude Include="b_knight.h" />
-    <ClInclude Include="b_pawn.h" />
-    <ClInclude Include="b_queen.h" />
-    <ClInclude Include="b_rook.h" />
-    <ClInclude Include="game.h" />
-    <ClInclude Include="king.h" />
-    <ClInclude Include="knight.h" />
-    <ClInclude Include="menu.h" />
-    <ClInclude Include="pawn.h" />
-    <ClInclude Include="pieces.h" />
-    <ClInclude Include="queen.h" />
-    <ClInclude Include="rook.h" />
-    <ClInclude Include="w_bishop.h" />
-    <ClInclude Include="w_king.h" />
-    <ClInclude Include="w_knight.h" />
-    <ClInclude Include="w_pawn.h" />
-    <ClInclude Include="w_queen.h" />
-    <ClInclude Include="w_rook.h" />
+    <ClInclude Include="Chess\bishop.h" />
+    <ClInclude Include="Chess\b_bishop.h" />
+    <ClInclude Include="Chess\b_king.h" />
+    <ClInclude Include="Chess\b_knight.h" />
+    <ClInclude Include="Chess\b_pawn.h" />
+    <ClInclude Include="Chess\b_queen.h" />
+    <ClInclude Include="Chess\b_rook.h" />
+    <ClInclude Include="Chess\game.h" />
+    <ClInclude Include="Chess\game2.h" />
+    <ClInclude Include="Chess\king.h" />
+    <ClInclude Include="Chess\knight.h" />
+    <ClInclude Include="Chess\menu.h" />
+    <ClInclude Include="Chess\pawn.h" />
+    <ClInclude Include="Chess\pieces.h" />
+    <ClInclude Include="Chess\queen.h" />
+    <ClInclude Include="Chess\rook.h" />
+    <ClInclude Include="Chess\unique_game.h" />
+    <ClInclude Include="Chess\w_bishop.h" />
+    <ClInclude Include="Chess\w_king.h" />
+    <ClInclude Include="Chess\w_knight.h" />
+    <ClInclude Include="Chess\w_pawn.h" />
+    <ClInclude Include="Chess\w_queen.h" />
+    <ClInclude Include="Chess\w_rook.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Chess\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

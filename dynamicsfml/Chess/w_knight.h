@@ -6,15 +6,17 @@
 #include "knight.h"
 using namespace sf;
 
-class W_Knight : public Knight
+template<class T, class U>
+class W_Knight : public Knight<T, U>
 {
 
 public:
 
 W_Knight(std::string png_path) 
 {
-    tex.loadFromFile(png_path);
-	sprite.setTexture(tex);
+    this->tex.loadFromFile(png_path);
+	this->sprite.setTexture(this->tex);
+    this->sprite.setScale(0.95, 0.95);
 }
 
 W_Knight()

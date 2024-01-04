@@ -6,15 +6,17 @@
 #include "rook.h"
 using namespace sf;
 
-class W_Rook : public Rook
+template<class T, class U>
+class W_Rook : public Rook<T, U>
 {
 
 public:
 
 W_Rook(std::string png_path) 
 {
-    tex.loadFromFile(png_path);
-	sprite.setTexture(tex);
+    this->tex.loadFromFile(png_path);
+	this->sprite.setTexture(this->tex);
+	this->sprite.setScale(0.95, 0.95);
 	// sprite.setScale(0.75,0.75);
 }
 
