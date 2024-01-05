@@ -14,42 +14,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Chess\menu.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\pawn.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\pieces.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\queen.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\rook.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\unique_game.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\w_bishop.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\w_king.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\w_knight.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\w_pawn.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\w_queen.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chess\w_rook.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
     <ClInclude Include="Chess\b_bishop.h">
       <Filter>Source files</Filter>
     </ClInclude>
@@ -74,13 +38,43 @@
     <ClInclude Include="Chess\game.h">
       <Filter>Source files</Filter>
     </ClInclude>
-    <ClInclude Include="Chess\game2.h">
-      <Filter>Source files</Filter>
-    </ClInclude>
     <ClInclude Include="Chess\king.h">
       <Filter>Source files</Filter>
     </ClInclude>
     <ClInclude Include="Chess\knight.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\menu.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\pawn.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\pieces.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\queen.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\rook.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\w_bishop.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\w_king.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\w_knight.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\w_pawn.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\w_queen.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chess\w_rook.h">
       <Filter>Source files</Filter>
     </ClInclude>
   </ItemGroup>

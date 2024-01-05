@@ -62,7 +62,7 @@ virtual bool capture_piece_white(Pieces<T, U>* black[], int posX_2, int posY_2)
             black[i]->sprite.setScale(0.5, 0.5);
             black[i]->flag_alive = 0;
             black[i]->sprite.setPosition(death_x, death_y);
-            death_y += 40;
+            death_y2 += 40;
             return 1;
         }
     }   

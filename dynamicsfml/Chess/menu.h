@@ -61,7 +61,7 @@ void names_menu()
     if (!texture.loadFromFile("asserts/names.png"))
         cout << "Not Found assets/names.png";
     sprite.setTexture(texture);
-    RenderWindow window(VideoMode(1280, 720), "Your Window Title"); // Replace "Your Window Title" with the desired title
+    RenderWindow window(VideoMode(1280, 720), "Enter Name "); // Replace "Your Window Title" with the desired title
 
     srand(time(0));
     bool enteringBoard = true;
@@ -115,8 +115,7 @@ void names_menu()
             }
         }
     }
-    for (string player : playersName)
-        cout << "name : " << player;
+   
 }
 
 bool display_menu()
@@ -142,17 +141,11 @@ bool display_menu()
                     exit(11);
                 else if (e.key.code == Keyboard::Escape)
                     exit(11);
-                //window.close(); 
-               		
-
-
-          		
-
 
                 if (e.type == Event::MouseButtonPressed && e.mouseButton.button == Mouse::Left)
                 {
                     Vector2i mousePos = Mouse::getPosition(window);
-                   std:: cout <<"x : "<< mousePos.x << " " << "|| y : "<<mousePos.y << std::endl;
+                 //  std:: cout <<"x : "<< mousePos.x << " " << "|| y : "<<mousePos.y << std::endl;
                     if (mousePos.x >= 254 && mousePos.x <= 439 && mousePos.y >= 282 && mousePos.y <= 345)
                     {
                     std::    cout << "Play";
@@ -179,7 +172,7 @@ bool display_menu()
                     }
                     if (mousePos.x >= 360 && mousePos.x <= 430 && mousePos.y >= 468 && mousePos.y <= 535)
                     {
-                        std::cout << "sound OFF ";
+                       // std::cout << "sound OFF ";
                         music.pause();
                         musicflag_bg =0;
 
@@ -202,6 +195,10 @@ bool display_menu()
 
 void gameover()
 {
+    Sprite s; 
+    Texture t; 
+    t.loadFromFile("asserts/CHECKMATE.png");
+    s.setTexture(t);
     Font font;
     font.loadFromFile("font2.ttf");
     Text text;											
@@ -235,7 +232,7 @@ void gameover()
             }
         }
         window2.clear();
-        window2.draw(background);
+        window2.draw(s);
         window2.draw(text);
         window2.display();
     } 

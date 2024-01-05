@@ -27,7 +27,6 @@
     <ClInclude Include="Chess\b_queen.h" />
     <ClInclude Include="Chess\b_rook.h" />
     <ClInclude Include="Chess\game.h" />
-    <ClInclude Include="Chess\game2.h" />
     <ClInclude Include="Chess\king.h" />
     <ClInclude Include="Chess\knight.h" />
     <ClInclude Include="Chess\menu.h" />
@@ -35,7 +34,6 @@
     <ClInclude Include="Chess\pieces.h" />
     <ClInclude Include="Chess\queen.h" />
     <ClInclude Include="Chess\rook.h" />
-    <ClInclude Include="Chess\unique_game.h" />
     <ClInclude Include="Chess\w_bishop.h" />
     <ClInclude Include="Chess\w_king.h" />
     <ClInclude Include="Chess\w_knight.h" />

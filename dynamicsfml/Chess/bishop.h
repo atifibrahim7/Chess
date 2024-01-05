@@ -18,56 +18,6 @@ Bishop()
 
 }
 
-// bool enemy_collision(int selected_piece, int select_posX, int select_posY, int place_posX, int place_posY, Pieces* white[], Pieces* black[]) override
-// {
-//     selected = selected_piece;
-//     posX_1 = select_posX;
-//     posY_1 = select_posY;
-//     posX_2 = place_posX;
-//     posY_2 = place_posY;
-
-//     // Check if the bishop is moving diagonally
-//     int deltaX = abs(posX_2 - posX_1);
-//     int deltaY = abs(posY_2 - posY_1);
-
-//     if (deltaX == deltaY)
-//     {
-//         int stepX = (posX_2 > posX_1) ? B_SIZE : -B_SIZE;
-//         int stepY = (posY_2 > posY_1) ? B_SIZE : -B_SIZE;
-//         int x = posX_1 + stepX;
-//         int y = posY_1 + stepY;
-
-//         while (x != posX_2 && y != posY_2)
-//         {
-//             for (int i = 0; i < 16; i++)
-//             {
-//                 if (black[i]->sprite.getPosition().x == x && black[i]->sprite.getPosition().y == y)
-//                 {
-//                     if (x == posX_2 && y == posY_2)
-//                     {
-//                         // capture_piece(black, i);
-//                         return 0;
-//                     }    
-//                     else
-//                         return 1;
-//                 }
-
-//                 if (i == selected)
-//                     continue;
-
-//                 if (white[i]->sprite.getPosition().x == x && white[i]->sprite.getPosition().y == y)
-//                 {
-//                     return 1; 
-//                 }
-//             }
-
-//             x += stepX;
-//             y += stepY;
-//         }
-//     }
-
-//     return 0; // No piece on the path
-// }
 
 bool enemy_collision(int selected_piece, int select_posX, int select_posY, int place_posX, int place_posY, Pieces<T, U>* black[], Pieces<T, U>* white[])//std::shared_ptr<Pieces>* black, std::shared_ptr<Pieces>* white) override
 {
